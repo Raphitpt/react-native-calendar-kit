@@ -4,6 +4,7 @@ import { SharedValue, useDerivedValue } from 'react-native-reanimated';
 import { useTheme } from '../context/ThemeProvider';
 import { getWeekNumberOfYear } from '../utils/dateUtils';
 import AnimText from './AnimText';
+import { months } from 'moment/moment';
 
 interface WeekNumberProps {
   date: SharedValue<number>;
@@ -36,7 +37,7 @@ const WeekNumber = ({ date }: WeekNumberProps) => {
         theme.weekNumberContainer,
       ]}
     >
-      <AnimText style={[styles.text, theme.weekNumber]} text={useDerivedValue(() => month.value)} />
+      <AnimText style={[styles.text, theme.weekNumber]} text={month} />
     </View>
     <View
       style={[
