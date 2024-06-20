@@ -4,7 +4,6 @@ import { SharedValue, useDerivedValue } from 'react-native-reanimated';
 import { useTheme } from '../context/ThemeProvider';
 import { getWeekNumberOfYear } from '../utils/dateUtils';
 import AnimText from './AnimText';
-import { months } from 'moment/moment';
 
 interface WeekNumberProps {
   date: SharedValue<number>;
@@ -26,31 +25,30 @@ const WeekNumber = ({ date }: WeekNumberProps) => {
   const weekNumber = useDerivedValue(() => getWeekNumberOfYear(date.value));
   const month = useDerivedValue(() => {
     const monthIndex = new Date(date.value).getMonth();
-    return monthNames[monthIndex];
+    return monthNames[monthIndex] || ''; // Assurez-vous de ne jamais retourner undefined
   });
 
   return (
-    <><View
-      style={[
-        styles.container,
-        { backgroundColor: theme.weekNumberBackgroundColor },
-        theme.weekNumberContainer,
-      ]}
-    >
-      <AnimText style={[styles.text, theme.weekNumber]} text={month} />
-    </View>
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: theme.weekNumberBackgroundColor },
-        theme.weekNumberContainer,
-      ]}
-    >
-      <AnimText style={[styles.text, theme.weekNumber]} text={useDerivedValue(() => "Sem " + weekNumber.value)} />
-
-    </View>
+    <>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: theme.weekNumberBackgroundColor },
+          theme.weekNumberContainer,
+        ]}
+      >
+        <AnimText style={[styles.text, theme.weekNumber]} text={month} />
+      </View>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: theme.weekNumberBackgroundColor },
+          theme.weekNumberContainer,
+        ]}
+      >
+        <AnimText style={[styles.text, theme.weekNumber]} text={useDerivedValue(() => `Sem ${weekNumber.value}`)} />
+      </View>
     </>
-    
   );
 };
 
