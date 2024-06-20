@@ -17,9 +17,27 @@ const WeekNumber = ({ date }: WeekNumberProps) => {
     weekNumberContainer: state.weekNumberContainer,
   }));
 
+  const monthNames = [
+    "Jan.", "Fev.", "Mar.", "Avr.", "Mai", "Jun.",
+    "Jui.", "Aoû.", "Sep.", "Oct.", "Nov.", "Dec."
+  ];
+
   const weekNumber = useDerivedValue(() => getWeekNumberOfYear(date.value));
+  const month = useDerivedValue(() => {
+    const monthIndex = new Date(date.value).getMonth();
+    return monthNames[monthIndex];
+  });
 
   return (
+    <><View
+      style={[
+        styles.container,
+        { backgroundColor: theme.weekNumberBackgroundColor },
+        theme.weekNumberContainer,
+      ]}
+    >
+      <AnimText style={[styles.text, theme.weekNumber]} text={useDerivedValue(() => month.value)} />
+    </View>
     <View
       style={[
         styles.container,
@@ -27,8 +45,11 @@ const WeekNumber = ({ date }: WeekNumberProps) => {
         theme.weekNumberContainer,
       ]}
     >
-      <AnimText style={[styles.text, theme.weekNumber]} text={weekNumber} />
+      <AnimText style={[styles.text, theme.weekNumber]} text={useDerivedValue(() => "Sem " + weekNumber.value)} />
+
     </View>
+    </>
+    
   );
 };
 
@@ -41,5 +62,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginTop: 8,
   },
-  text: { fontSize: 12, textAlign: 'center' },
+  text: {
+    fontSize: 12,
+    textAlign: 'center'
+  },
 });
