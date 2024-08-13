@@ -36,7 +36,7 @@ import type {
   DateType,
   GoToDateOptions,
 } from '../types';
-import Haptic from '../utils/HapticService';
+// import Haptic from '../utils/HapticService';
 import { parseDateTime, startOfWeek } from '../utils/dateUtils';
 import {
   calculateSlots,
@@ -54,6 +54,7 @@ import NowIndicatorProvider from './NowIndicatorProvider';
 import ThemeProvider from './ThemeProvider';
 import TimeZoneProvider from './TimeZoneProvider';
 import UnavailableHoursProvider from './UnavailableHoursProvider';
+import VisibleDateProvider from './VisibleDateProvider';
 
 Settings.throwOnInvalid = true;
 
@@ -151,7 +152,7 @@ const CalendarProvider: React.ForwardRefRenderFunction<
   ref
 ) => {
   // TODO: Implement haptic feedback
-  const useHaptic = false;
+  // const useHaptic = false;
   // TODO: Implement all day events
   const useAllDayEvent = false;
   // TODO: Implement RTL
@@ -489,9 +490,9 @@ const CalendarProvider: React.ForwardRefRenderFunction<
   const snapToInterval =
     numberOfDays > 1 && scrollByDay ? columnWidth : undefined;
 
-  useEffect(() => {
-    Haptic.setEnabled(useHaptic);
-  }, [useHaptic]);
+  // useEffect(() => {
+  //   Haptic.setEnabled(useHaptic);
+  // }, [useHaptic]);
 
   const context = useMemo<CalendarContextProps>(
     () => ({
@@ -605,21 +606,23 @@ const CalendarProvider: React.ForwardRefRenderFunction<
             >
               <ActionsProvider {...actionsProps}>
                 <LoadingContext.Provider value={loadingValue}>
-                  <HighlightDatesProvider highlightDates={highlightDates}>
-                    <UnavailableHoursProvider
-                      unavailableHours={unavailableHours}
-                    >
-                      <EventsProvider
-                        events={events}
-                        visibleStart={visibleDateUnix}
-                        firstDay={firstDay}
+                  <VisibleDateProvider initialStart={visibleDateUnix}>
+                    <HighlightDatesProvider highlightDates={highlightDates}>
+                      <UnavailableHoursProvider
+                        unavailableHours={unavailableHours}
                         timeZone={timeZone}
-                        useAllDayEvent={useAllDayEvent}
                       >
-                        {children}
-                      </EventsProvider>
-                    </UnavailableHoursProvider>
-                  </HighlightDatesProvider>
+                        <EventsProvider
+                          events={events}
+                          firstDay={firstDay}
+                          timeZone={timeZone}
+                          useAllDayEvent={useAllDayEvent}
+                        >
+                          {children}
+                        </EventsProvider>
+                      </UnavailableHoursProvider>
+                    </HighlightDatesProvider>
+                  </VisibleDateProvider>
                 </LoadingContext.Provider>
               </ActionsProvider>
             </ThemeProvider>
